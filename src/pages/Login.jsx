@@ -1,17 +1,31 @@
-import { Button, Form, Input } from "antd";
+import { App, Button, Form, Input } from "antd";
 import { useLogin } from "../hooks/usuarioHooks";
+import { useNavigate } from "react-router";
 
 const Login = () => {
 
+    const navigate = useNavigate();
+    const { notification } = App.useApp();
     const { mutate: login, isPending: loginPending } = useLogin();
 
     function logar(dados) {
         login(dados, {
-            onSuccess: (res) => {
-                alert(res.description)
+            onSuccess: ({ type, description, usuario, token }) => {
+                notification[type]({
+                    description
+                });
+                if (type == "success") {
+                    sessionStorage.setItem("token", token);
+                    sessionStorage.setItem("usuario", JSON.stringify(usuario));
+                    navigate("/home");
+                }
+            },
+            onError: ({ response: { data: { type, description } } }) => {
+                notification[type]({
+                    description
+                });
             }
         })
-
     }
 
     return (
@@ -39,6 +53,7 @@ const Login = () => {
                         type="primary"
                         htmlType="submit"
                         className="w-full mt-4"
+                        loading={loginPending}
                     >Enviar</Button>
                 </Form>
             </div>
