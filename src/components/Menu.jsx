@@ -7,6 +7,7 @@ const Menu = () => {
             <nav className="flex flex-col *:leading-10 *:font-semibold *:text-white! *:rounded *:duration-200! *:pl-4 *:[&.active]:bg-white! *:[&.active]:text-blue-500!">
                 <NavLink end to="/painel">Home</NavLink>
                 <NavLink end to="/painel/niveis">Níveis</NavLink>
+                <NavLink end to="/painel/imoveis-tipo">Imóveis Tipo</NavLink>
             </nav>
         </header>
     );
