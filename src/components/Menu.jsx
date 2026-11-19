@@ -8,6 +8,7 @@ const Menu = () => {
                 <NavLink end to="/painel">Home</NavLink>
                 <NavLink end to="/painel/niveis">Níveis</NavLink>
                 <NavLink end to="/painel/imoveis-tipo">Imóveis Tipo</NavLink>
+                <NavLink end to="/painel/locatarios">Locatários</NavLink>
             </nav>
         </header>
     );
