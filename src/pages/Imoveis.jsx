@@ -4,14 +4,15 @@ import { useBuscarImovel, useCriarImovel, useDeletarImovel, useEditarImovel } fr
 import { useState } from "react";
 import { useBuscarImoveisTipo } from './../hooks/imoveisTipoHooks';
 import { useBuscarLocatario } from './../hooks/locatariosHooks';
+import { APIURL } from "../services";
 
 
-const Imovel = () => {
+const Imoveis = () => {
 
     const [mostrarCriar, setMostrarCriar] = useState(false);
     const [mostrarEditar, setMostrarEditar] = useState(false);
     const { notification } = App.useApp();
-    const { data: imoveis, isLoading: loadingImovel } = useBuscarImovel();
+    const { data: imoveis, isLoading: loadingImovel } = useBuscarImovel("?tipo=true&locatario=true");
     const { data: tipos } = useBuscarImoveisTipo();
     const { data: locatarios } = useBuscarLocatario();
     const { mutate: criarImovel, isLoading: loadingCriar } = useCriarImovel();
@@ -89,13 +90,15 @@ const Imovel = () => {
                     <Table.Column
                         title="Foto"
                         render={(_, linha) => {
-                            linha.imagem ? (
+                            return linha.imagem ? (
                                 <Image
-                                    className="w-20 h-10 object-contain"
-                                    src={linha?.imagem}
+                                    width={80}
+                                    height={60}
+                                    className="object-contain"
+                                    src={`${APIURL}${linha?.imagem}`}
                                 />
                             ) : (
-                                <div className="w-20 h-10 bg-slate-300 flex justify-center items-center">
+                                <div className="w-20 h-15 bg-slate-300 flex justify-center items-center">
                                     <LuImageOff />
                                 </div>
                             )
@@ -104,12 +107,33 @@ const Imovel = () => {
                     <Table.Column
                         title="Endereço"
                         render={(_, linha) => (
-                            `${linha.logradouro} ${linha.numero} ${linha?.complemento}, ${linha.bairro}, ${linha.cidade}-${linha.estado}`
+                            `${linha.logradouro} ${linha.numero} ${linha.complemento ? linha.complemento : ""}, ${linha.bairro}, ${linha.cidade}-${linha.estado}`
                         )}
                     />
                     <Table.Column
                         title="Quartos"
                         dataIndex="quartos"
+                        align="center"
+                    />
+                    <Table.Column
+                        title="Banheiros"
+                        dataIndex="banheiros"
+                        align="center"
+                    />
+                    <Table.Column
+                        title="Garagens"
+                        render={(_, linha) => linha.garagens ?? "---"}
+                        align="center"
+                    />
+                    <Table.Column
+                        title="Tipo"
+                        dataIndex={["imoveis_tipo", "nome"]}
+                        align="center"
+                    />
+                    <Table.Column
+                        title="Locatário"
+                        render={(_, linha) => (linha.locatario ? linha.locatario.nome : "Disponível")}
+                        align="center"
                     />
                     <Table.Column
                         title="Ações"
@@ -209,4 +233,4 @@ const Imovel = () => {
     );
 }
 
-export default Imovel;
+export default Imoveis;
